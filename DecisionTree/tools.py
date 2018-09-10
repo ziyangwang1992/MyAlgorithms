@@ -39,7 +39,10 @@ def createDataset():
     [u"青绿", u"蜷缩", u"沉闷", u"稍糊", u"稍凹", u"硬滑"]]
     
     y = ["yes", "yes", "yes", "yes", "yes", "yes", "yes", "yes", "no", "no", "no", "no", "no", "no", "no", "no", "no"]
-    return X, y
+    
+    labels = [u'色泽', u'根蒂', u'敲声', u'纹理', u'脐部', u'触感']
+
+    return X, y, labels
 
     
 def get_max_label(y):
@@ -102,7 +105,7 @@ def get_best_feat_index(X, y):
     return max_info_gain_index 
 
 
-def create_tree(X, y):
+def create_tree(X, y, labels):
     sample_num = len(X)
     feat_num = len(X[0])
     if feat_num == 0:
@@ -110,9 +113,12 @@ def create_tree(X, y):
     if y.count(y[0]) == len(y):
         return y[0]
     best_feat_index = get_best_feat_index(X, y)
-    tree = {best_feat_index:{}}
+    best_feat_label = labels[best_feat_index]
+    tree = {best_feat_label:{}}
+    del(labels[best_feat_index])
     best_feat_values = set([sample[best_feat_index] for sample in X])
     for value in best_feat_values:
+        sub_labels = labels[:]
         sub_X, sub_y = split_dataset(X, y, best_feat_index, value)
-        tree[best_feat_index][value] = create_tree(sub_X, sub_y) 
+        tree[best_feat_label][value] = create_tree(sub_X, sub_y, sub_labels) 
     return tree

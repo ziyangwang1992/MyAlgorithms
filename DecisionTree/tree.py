@@ -30,15 +30,18 @@ class DecisionTree(object):
 
     def __init__(self):
         self.tree = None
+        self.labels = None
 
-    def fit(self, X, y):
+
+    def fit(self, X, y, labels):
         if len(X) != len(y):
             sys.stderr.write("[FATAL] Your sample and label have different nums.\n")
             return False
         if len(X) == 0 or len(y) == 0:
             sys.stderr.write("[FATAL] your sample or label is null.\n")
             return False
-        self.tree = create_tree(X, y)
+        self.labels = labels
+        self.tree = create_tree(X, y, labels[:])
         return True
 
     def predict(self, X):
