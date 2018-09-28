@@ -125,14 +125,44 @@ def create_tree(dataset, labels):
     return tree
 
 
-def predict_one(x_dict, tree):
-    x_dict = dict(zip(x, label))
-    pass
+def predict_one(sample, labels, tree):
+    if not isinstance(tree, dict):
+        return tree
+    label_dict = dict(zip(labels, sample))
+    keys = tree.keys()
+    if keys is None or len(keys) == 0:
+        sys.stderr.write("[ERROR] predict failed: %s\n" % sample)
+        return None
+    label = keys[0]
+
+    if label not in label_dict:
+        sys.stderr.write("[ERROR] predict failed: %s\n, label: %s not in labels.\n" % (sample, label))
+        return None
+    value = label_dict[label]
+    sub_tree = {}
+    try:
+        sub_tree = tree[label][value]
+    except:
+        sys.stderr.write("[ERROR] predict: %s failed: %s is not a value of label: %s.\n" % (sample, value, label))
+        return None
+    return predict_one(sample, labels, sub_tree)
 
 
 def predict(X, label, tree):
     for sample in X:
-        if len(x) != len(label):
-            sys.stderr.write("[ERROR] sample: %s and label: %s have different columns.\n" % (x, label))
+        if len(sample) != len(label):
+            sys.stderr.write("[ERROR] sample: %s and label: %s have different columns.\n" % (sample, label))
             return False 
-        predict_one(sample, label, tree)         
+        pred = predict_one(sample, label, tree)
+        if pred:
+            print(pred)
+        else:
+            print("failed.")
+
+
+def save_model():
+    pass
+
+
+def load_model():
+    pass

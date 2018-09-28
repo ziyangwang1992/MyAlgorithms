@@ -39,7 +39,7 @@ class DecisionTree(object):
         if len(dataset) == 0 or len(labels) == 0:
             sys.stderr.write("[FATAL] your sample or label is null.\n")
             return False 
-        if len(dataset[0]) != len(labels) - 1:
+        if len(dataset[0]) != len(labels) + 1:
             sys.stderr.write("[FATAL] your sample and label have different columns.\n")
             return False
         if len(dataset[0]) < 3:
@@ -55,7 +55,7 @@ class DecisionTree(object):
         if X is None:
             sys.stderr.write("[FATAL] your input dataset is none, please recheck.\n")
             return False
-        if len(X[0] != len(labels)):
+        if len(X[0]) != len(labels):
             sys.stderr.write("[FATAL] your sample and label have different columns.")
             return False
         result = predict(X, labels, self.tree)
