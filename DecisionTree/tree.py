@@ -15,8 +15,10 @@ Last modified : 2018-08-28 21:04
 Brief         : 决策树ID3
 """
 
+import os
 import sys
 
+import tools
 from tools import create_tree
 from tools import predict
 from tools import save_model
@@ -61,7 +63,14 @@ class DecisionTree(object):
         result = predict(X, labels, self.tree)
 
     def save_model(self, path):
-        pass
+        tools.save_model(path, self.tree)
 
-    def load_mode(self, path):
-        pass
+    def load_model(self, path):
+        if not os.path.isfile(path):
+            sys.stderr.write("[ERROR] file: %s is not exists.\n" % path)
+            return False
+        load_tree = tools.load_model(path)
+        if load_tree:
+            self.tree = load_tree
+            return True
+        return False

@@ -18,6 +18,8 @@ Brief         :
 import sys 
 from math import log
 
+import pickle
+
 
 def createDataset():
     dataset = [[u"青绿", u"蜷缩", u"浊响", u"清晰", u"凹陷", u"硬滑", "yes"], 
@@ -133,7 +135,7 @@ def predict_one(sample, labels, tree):
     if keys is None or len(keys) == 0:
         sys.stderr.write("[ERROR] predict failed: %s\n" % sample)
         return None
-    label = keys[0]
+    label = list(keys)[0]
 
     if label not in label_dict:
         sys.stderr.write("[ERROR] predict failed: %s\n, label: %s not in labels.\n" % (sample, label))
@@ -160,9 +162,13 @@ def predict(X, label, tree):
             print("failed.")
 
 
-def save_model():
-    pass
+def save_model(path, tree):
+    with open(path, 'wb') as file:
+        pickle.dump(tree, file)
 
 
-def load_model():
-    pass
+def load_model(path):
+    tree = None
+    with open(path, 'rb') as file:
+        tree = pickle.load(file)
+    return tree
